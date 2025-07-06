@@ -2,13 +2,13 @@ services:
   order-generator-api:
     build:
       context: .
-      dockerfile: ./OrderGenerator/dockerfile
+      dockerfile: ../OrderGenerator/dockerfile
     image: order-generator
     container_name: order-generator
     restart: unless-stopped
     working_dir: /app
     volumes:
-      - ./OrderGenerator:/app
+      - ../OrderGenerator:/app
     ports:
       - "80:8080"
     environment:
@@ -23,7 +23,7 @@ services:
     container_name: rabbitmq
     restart: unless-stopped
     volumes:
-      - ./RabbitMq:/var/lib/rabbitmq
+      - ../RabbitMq:/var/lib/rabbitmq
     ports:
       - "5672:5672"     # Porta envio de mensagens
       - "15672:15672"   # Porta do painel web
