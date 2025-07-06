@@ -1,0 +1,38 @@
+services:
+  order-generator-api:
+    build:
+      context: .
+      dockerfile: ./OrderGenerator/dockerfile
+    image: order-generator
+    container_name: order-generator
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./OrderGenerator:/app
+    ports:
+      - "80:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:8080"
+    tty: true # Mantém o terminal ativo - foi necessário só na criação da aplicação de dentro do container
+    networks:
+      - order-services-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    volumes:
+      - ./RabbitMq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"     # Porta envio de mensagens
+      - "15672:15672"   # Porta do painel web
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - order-services-network
+  
+networks:
+  order-services-network:
+    driver: bridge

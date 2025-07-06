@@ -1,0 +1,2 @@
+- primeira vez -> `docker compose up --build -d `
+- seguintes -> `docker compose up -d`
