@@ -30,7 +30,7 @@ services:
     working_dir: /app
     volumes:
       - ../OrderProcessor/OrderProcessorApi:/app
-      - ../OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     ports:
       - "80:8080"
     depends_on:
