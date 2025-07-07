@@ -2,7 +2,7 @@ services:
   order-generator-api:
     build:
       context: .
-      dockerfile: ../OrderGenerator/dockerfile
+      dockerfile: ./OrderGenerator/dockerfile
     image: order-generator
     container_name: order-generator
     restart: unless-stopped
@@ -23,7 +23,7 @@ services:
   order-processor-api:
     build:
       context: .
-      dockerfile: ../OrderProcessor/dockerfile
+      dockerfile: ./OrderProcessor/dockerfile
     image: order-processor
     container_name: order-processor
     restart: unless-stopped
