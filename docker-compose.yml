@@ -10,11 +10,33 @@ services:
     volumes:
       - ../OrderGenerator:/app
     ports:
-      - "80:8080"
+      - "5287:5287"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-    command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:8080"
-    tty: true # Mantém o terminal ativo - foi necessário só na criação da aplicação de dentro do container
+    depends_on:
+      - rabbitmq
+    command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    networks:
+      - order-services-network
+
+  order-processor-api:
+    build:
+      context: .
+      dockerfile: ../OrderProcessor/dockerfile
+    image: order-processor
+    container_name: order-processor
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../OrderProcessor/OrderProcessorApi:/app
+      - ../OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    ports:
+      - "80:8080"
+    depends_on:
+      - rabbitmq
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    command: php artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
       - order-services-network
 
@@ -22,14 +44,29 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     restart: unless-stopped
-    volumes:
-      - ../RabbitMq:/var/lib/rabbitmq
+    # volumes:
+    #   - ../RabbitMq:/var/lib/rabbitmq
     ports:
       - "5672:5672"     # Porta envio de mensagens
       - "15672:15672"   # Porta do painel web
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - order-services-network
+
+  postgres:
+    image: postgres:16.9-bookworm
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - ../Postgres/dbdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: order_generator_db
     networks:
       - order-services-network
   
