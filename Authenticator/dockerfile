@@ -1,0 +1,32 @@
+FROM php:8.3.11-fpm-bookworm
+
+RUN apt-get update && apt-get install -y \
+    libonig-dev \
+    libpq-dev \
+    libxml2-dev \
+    unzip \
+    # curl \
+    # libpng-dev \
+    # zlib1g-dev \
+    # libzip-dev \
+    zip
+
+RUN apt-get install -y tzdata && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" > /etc/timezone
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo pdo_pgsql pgsql mbstring xml bcmath ctype opcache sockets
+
+RUN pecl install -o -f redis && \
+    docker-php-ext-enable redis
+
+# para configurar o xdebug se necessário
+# RUN pecl install xdebug \
+#     && docker-php-ext-enable xdebug
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# para configurar o xdebug se necessário
+# COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

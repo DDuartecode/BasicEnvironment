@@ -1,4 +1,23 @@
 services:
+  authenticator-api:
+    build: 
+      context: .
+      dockerfile: ./Authenticator/dockerfile
+    image: authenticator
+    container_name: authenticator
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../Authenticator:/app
+    ports:
+      - 80:8080
+    depends_on:
+      - postgres
+    command: php /app/AuthenticatorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
+    networks:
+        - order-services-network
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+  
   order-generator-api:
     build:
       context: .
@@ -13,6 +32,7 @@ services:
       - "5287:5287"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      JWT_SECRET: 'owZP3H9N1Pyn97xpftzy6xCthdkJHbCoIz4Zf334xVzPlcvyQrGtNjAFpTz1Xkc5'
     depends_on:
       - rabbitmq
     command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
@@ -29,13 +49,13 @@ services:
     restart: unless-stopped
     working_dir: /app
     volumes:
-      - ../OrderProcessor/OrderProcessorApi:/app
+      - ../OrderProcessor:/app
       - ./OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     ports:
-      - "80:8080"
+      - "3000:8080"
     depends_on:
       - rabbitmq
-    command: php artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
+    command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
     networks:
       - order-services-network
     tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
@@ -72,6 +92,23 @@ services:
       - order-services-network
     tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
   
+  postgres-auth:
+    image: postgres:16.9-bookworm
+    container_name: postgres-auth
+    restart: unless-stopped
+    volumes:
+      - ../PostgresAuth/dbdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: auth_db
+    networks:
+      - order-services-network
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+
+
 networks:
   order-services-network:
     driver: bridge
