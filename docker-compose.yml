@@ -17,7 +17,27 @@ services:
     networks:
         - order-services-network
     tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
-  
+
+  order-api:
+    build:
+      context: .
+      dockerfile: ./OrderProcessor/dockerfile
+    image: order-processor
+    container_name: order-api
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../OrderProcessor:/app
+      - ./OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    ports:
+      - "3000:8080"
+    depends_on:
+      - rabbitmq
+    command: php /app/OrderProcessorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
+    networks:
+      - order-services-network
+    tty: true
+
   order-generator-api:
     build:
       context: .
@@ -40,7 +60,7 @@ services:
       - order-services-network
     tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
-  order-processor-api:
+  order-processor:
     build:
       context: .
       dockerfile: ./OrderProcessor/dockerfile
@@ -51,8 +71,8 @@ services:
     volumes:
       - ../OrderProcessor:/app
       - ./OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
-    ports:
-      - "3000:8080"
+    # ports:
+    #   - "3000:8080"
     depends_on:
       - rabbitmq
     command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
