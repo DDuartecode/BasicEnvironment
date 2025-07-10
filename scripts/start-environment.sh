@@ -135,7 +135,4 @@ config_order_db
 config_auth_api
 config_order_api
 
-$DOCKER_CMD down
-$DOCKER_CMD up -d
-
 exit $RETURN
