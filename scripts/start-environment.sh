@@ -142,7 +142,7 @@ init_auth_api_container
 init_order_api_container
 init_order_processor_container
 ini_order_generator_container
-init_rabbitmq_container()
+init_rabbitmq_container
 
 config_auth_db
 config_order_db
