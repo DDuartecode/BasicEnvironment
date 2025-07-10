@@ -131,6 +131,11 @@ init_order_processor_container()
 # init_order_api_container
 # init_order_processor_container
 
+docker build -t authenticator:latest ./Authenticator
+docker build -t order-api:latest ./OrderProcessor
+docker build -t order-processor:latest ./OrderProcessor
+docker build -t order-generator:latest ./OrderGenerator
+
 $DOCKER_CMD up --build -d
 
 config_auth_db
