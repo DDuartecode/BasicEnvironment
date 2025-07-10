@@ -107,6 +107,7 @@ config_order_api()
 {
     echo "Executando composer install..."
     $DOCKER_CMD exec $ORDER_API_HOST composer install --working-dir=/app/OrderProcessorApi
+    $DOCKER_CMD exec $ORDER_API_HOST composer install --working-dir=/app/OrderProcessorCore
 
     echo "Rodando migrations..."
     $DOCKER_CMD exec $ORDER_API_HOST php /app/OrderProcessorApi/artisan migrate --force
