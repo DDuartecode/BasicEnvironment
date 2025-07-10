@@ -124,19 +124,11 @@ init_order_processor_container()
     $DOCKER_CMD up $ORDER_API_HOST --build -d
 }
 
-#provável executar docker compose up --build -d - direto
-# init_auth_db_container
-# init_order_db_container
-# init_auth_api_container
-# init_order_api_container
-# init_order_processor_container
-
-docker build -t authenticator:latest ./Authenticator
-docker build -t order-api:latest ./OrderProcessor
-docker build -t order-processor:latest ./OrderProcessor
-docker build -t order-generator:latest ./OrderGenerator
-
-$DOCKER_CMD up --build -d
+init_auth_db_container
+init_order_db_container
+init_auth_api_container
+init_order_api_container
+init_order_processor_container
 
 config_auth_db
 config_order_db
