@@ -13,7 +13,7 @@ services:
       - 80:8080
     depends_on:
       - postgres-auth
-    command: php /app/AuthenticatorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
+    #command: php /app/AuthenticatorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
         - order-services-network
 
@@ -32,7 +32,7 @@ services:
       - "3000:8080"
     depends_on:
       - postgres-order
-    command: php /app/OrderProcessorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
+    #command: php /app/OrderProcessorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
       - order-services-network
 
@@ -52,7 +52,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
     depends_on:
       - rabbitmq
-    command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
+    #command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
     networks:
       - order-services-network
 
@@ -70,7 +70,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres-order
-    command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
+    #command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
     networks:
       - order-services-network
 
