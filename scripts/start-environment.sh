@@ -11,6 +11,9 @@ git clone https://github.com/DDuartecode/Authenticator.git ../Authenticator
 git clone https://github.com/DDuartecode/OrderProcessor.git ../OrderProcessor
 git clone https://github.com/DDuartecode/OrderGenerator.git ../OrderGenerator
 
+cp -r ../Authenticator/AuthenticatorApi/.env.example ../Authenticator/AuthenticatorApi/.env
+cp -r ../OrderProcessor/OrderProcessorApi/.env.example ../OrderProcessor/OrderProcessorApi/.env
+
 #iniciar banco autenticação
 init_auth_db_container()
 {
@@ -76,8 +79,8 @@ config_auth_api()
     echo "Instalando Passport..."
     $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan passport:install #não rodar as migration quando pedir
 
-    # echo "Rodando migrations..."
-    # $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan migrate --force
+    echo "Rodando migrations..."
+    $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan migrate --force
 
     echo "Criando personal acess..."
     $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan passport:client --personal --no-interaction
