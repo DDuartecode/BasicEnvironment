@@ -16,7 +16,7 @@ services:
     command: php /app/AuthenticatorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
         - order-services-network
-    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   order-api:
     build:
@@ -36,7 +36,7 @@ services:
     command: php /app/OrderProcessorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
       - order-services-network
-    #tty: true
+    tty: true
 
   order-generator-api:
     build:
@@ -57,7 +57,7 @@ services:
     command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
     networks:
       - order-services-network
-    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   order-processor:
     build:
@@ -76,7 +76,7 @@ services:
     command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
     networks:
       - order-services-network
-    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   rabbitmq:
     image: rabbitmq:3-management
