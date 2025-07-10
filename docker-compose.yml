@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: ./OrderProcessor/dockerfile
-    image: order-processor
+    image: order-api
     container_name: order-api
     restart: unless-stopped
     working_dir: /app
