@@ -7,9 +7,9 @@ source "$SCRIPT_PATH/variables.sh"
 RETURN=0
 
 #clonar os projetos aqui
-git clone https://github.com/DDuartecode/Authenticator.git ../
-git clone https://github.com/DDuartecode/OrderProcessor.git ../
-git clone https://github.com/DDuartecode/OrderGenerator.git ../
+git clone https://github.com/DDuartecode/Authenticator.git ../Authenticator
+git clone https://github.com/DDuartecode/OrderProcessor.git ../OrderProcessor
+git clone https://github.com/DDuartecode/OrderGenerator.git ../OrderGenerator
 
 #iniciar banco autenticação
 init_auth_db_container()
