@@ -44,4 +44,6 @@
 **OBS:** Os serviçoes no momento utilizam os server fornecidos pelas libs, em breve adicionarei serviçoes utilizando `ngnx` ou `semelhante`
 
 
+# Fluxo dos serviços #
 
+![Diagrama](fluxo-pedidos.jpg)
