@@ -12,11 +12,11 @@ services:
     ports:
       - 80:8080
     depends_on:
-      - postgres
+      - postgres-auth
     command: php /app/AuthenticatorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
         - order-services-network
-    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   order-api:
     build:
@@ -32,11 +32,11 @@ services:
     ports:
       - "3000:8080"
     depends_on:
-      - rabbitmq
+      - postgres-order
     command: php /app/OrderProcessorApi/artisan serve --host=0.0.0.0 --port=8080 # Somente para desenvolvimento
     networks:
       - order-services-network
-    tty: true
+    #tty: true
 
   order-generator-api:
     build:
@@ -52,13 +52,12 @@ services:
       - "5287:5287"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      JWT_SECRET: 'owZP3H9N1Pyn97xpftzy6xCthdkJHbCoIz4Zf334xVzPlcvyQrGtNjAFpTz1Xkc5'
     depends_on:
       - rabbitmq
     command: dotnet run --project OrderGeneratorApi/ --urls "http://0.0.0.0:5287" # Somente para desenvolvimento
     networks:
       - order-services-network
-    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   order-processor:
     build:
@@ -71,14 +70,13 @@ services:
     volumes:
       - ../OrderProcessor:/app
       - ./OrderProcessor/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
-    # ports:
-    #   - "3000:8080"
     depends_on:
       - rabbitmq
+      - postgres-order
     command: php /app/OrderProcessorApi/artisan queue:work # Somente para desenvolvimento
     networks:
       - order-services-network
-    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
+    #tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -96,22 +94,21 @@ services:
     networks:
       - order-services-network
 
-  postgres:
+  postgres-order:
     image: postgres:16.9-bookworm
-    container_name: postgres
+    container_name: postgres-order
     restart: unless-stopped
     volumes:
-      - ../Postgres/dbdata:/var/lib/postgresql/data
+      - ../PostgresOrder/dbdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: order_generator_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha
+      POSTGRES_DB: postgres
     networks:
       - order-services-network
-    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
-  
+
   postgres-auth:
     image: postgres:16.9-bookworm
     container_name: postgres-auth
@@ -121,13 +118,11 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha
+      POSTGRES_DB: postgres
     networks:
       - order-services-network
-    tty: true # Mantém o terminal ativo - remover após conclusão do desenvolvimento
-
 
 networks:
   order-services-network:
