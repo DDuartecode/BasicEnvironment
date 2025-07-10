@@ -124,11 +124,25 @@ init_order_processor_container()
     $DOCKER_CMD up $ORDER_API_HOST --build -d
 }
 
+#inicia o gerador de pedidos
+ini_order_generator_container()
+{
+    $DOCKER_CMD up $ORDER_ORDER_GENERATOR_HOST --build -d
+}
+
+#inicia fila
+init_rabbitmq_container()
+{
+    $DOCKER_CMD up $RABBITMQ_HOST --build -d
+}
+
 init_auth_db_container
 init_order_db_container
 init_auth_api_container
 init_order_api_container
 init_order_processor_container
+ini_order_generator_container
+init_rabbitmq_container()
 
 config_auth_db
 config_order_db
