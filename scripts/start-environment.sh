@@ -76,8 +76,8 @@ config_auth_api()
     echo "Instalando Passport..."
     $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan passport:install #não rodar as migration quando pedir
 
-    echo "Rodando migrations..."
-    $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan migrate --force
+    # echo "Rodando migrations..."
+    # $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan migrate --force
 
     echo "Criando personal acess..."
     $DOCKER_CMD exec $AUTH_API_HOST php /app/AuthenticatorApi/artisan passport:client --personal --no-interaction
