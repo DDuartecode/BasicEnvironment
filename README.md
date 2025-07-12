@@ -1,5 +1,7 @@
 # Ambiente base #
 
+**OSB:** Na raiz do projeto contém uma collection do postman
+
 ## Instalação ##
 
 - Primeiro é necessário clonar este repositório: **Obs** _recomento clonar dentro de uma pasta `projeto` por exmeplo_
@@ -41,7 +43,7 @@
     docker compose up #-d para rodar em segundo plano
     ```
 
-**OBS:** Os serviçoes no momento utilizam os server fornecidos pelas libs, em breve adicionarei serviçoes utilizando `ngnx` ou `semelhante`
+**OBS:** Os serviçoes no momento utilizam os server fornecidos pelas libs, em breve adicionarei serviçoes utilizando `ngnx` ou `semelhante
 
 
 # Fluxo dos serviços #
